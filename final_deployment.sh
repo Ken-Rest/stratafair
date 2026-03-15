@@ -36,18 +36,21 @@ setup_github() {
     git add .
     
     # Commit changes
-    git commit -m "Final deployment preparation"
+    git commit -m "Final deployment preparation" || true
     
-    # Create and push to GitHub
-    gh repo create stratafair --public --source=. --remote=origin
+    # Try to create repo, ignore if exists
+    gh repo create stratafair --public --source=. --remote=origin || true
+    
+    # Force push to ensure latest code
+    git push -u origin main --force
 }
 
 # Configure deployment secrets
 configure_secrets() {
     log "Configuring GitHub Secrets..."
-    gh secret set API_BASE_URL https://corpmini-backend.onrender.com/api
-    gh secret set CLOUDFLARE_API_TOKEN sk-5Ry9yWPnWtjfRIEbj3tdzBtP4cOGz4qw0QYOO
-    gh secret set CLOUDFLARE_ACCOUNT_ID 7927cc28dc707f32ef6d1f2189647682
+    gh secret set API_BASE_URL https://corpmini-backend.onrender.com/api || true
+    gh secret set CLOUDFLARE_API_TOKEN sk-5Ry9yWPnWtjfRIEbj3tdzBtP4cOGz4qw0QYOO || true
+    gh secret set CLOUDFLARE_ACCOUNT_ID 7927cc28dc707f32ef6d1f2189647682 || true
 }
 
 # Deploy frontend
